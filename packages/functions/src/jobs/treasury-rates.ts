@@ -1,8 +1,8 @@
 import { ApiHandler } from "sst/node/api";
-import { TimeSeries } from "@my-sst-app/core/time-series";
+import { Rate } from "@my-sst-app/core/rate";
 
 export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
-  await TimeSeries.create();
+  // await Rate.findOrCreate();
 
   return {
     statusCode: 200,

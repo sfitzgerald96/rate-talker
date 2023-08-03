@@ -12,13 +12,19 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "sst": "^2.22.2",
+    "@tsconfig/node16": "^16.1.0",
     "aws-cdk-lib": "2.84.0",
     "constructs": "10.1.156",
-    "typescript": "^5.1.6",
-    "@tsconfig/node16": "^16.1.0"
+    "sst": "^2.22.2",
+    "typescript": "^5.1.6"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "dependencies": {
+    "aws-sdk": "^2.1424.0",
+    "moment": "^2.29.4",
+    "node-fetch": "^3.3.2",
+    "node-html-parser": "^6.1.5"
+  }
 }

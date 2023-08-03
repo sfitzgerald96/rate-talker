@@ -1,0 +1,6 @@
+{
+  "sfitzgerald-my-sst-app-DynamoDB": {},
+  "sfitzgerald-my-sst-app-API": {
+    "ApiEndpoint": "https://olz07rbc4e.execute-api.us-east-1.amazonaws.com"
+  }
+}
