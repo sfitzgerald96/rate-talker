@@ -4701,8 +4701,8 @@ var LaunchRequestHandler = {
     return request.type === "LaunchRequest";
   },
   handle(handlerInput) {
-    const speechText = "Welcome to your SDK weather skill. Ask me the weather!";
-    const response = handlerInput.responseBuilder.speak(speechText).reprompt(speechText).withSimpleCard("Welcome to your SDK weather skill. Ask me the weather!", speechText).getResponse();
+    const speechText = "Welcome to your rate talker skill. Ask me about mortgage rates!";
+    const response = handlerInput.responseBuilder.speak(speechText).reprompt(speechText).withSimpleCard("Welcome to your rate talker skill. Ask me about mortgage rates!", speechText).getResponse();
     return response;
   }
 };
@@ -4756,13 +4756,24 @@ var MyErrorHandler = {
     return handlerInput.responseBuilder.speak("Sorry, I don't understand your command. Please say it again.").reprompt("Sorry, I don't understand your command. Please say it again.").getResponse();
   }
 };
-var handler = import_ask_sdk_core.SkillBuilders.custom().addRequestHandlers(
-  LaunchRequestHandler,
-  AskWeatherIntentHandler,
-  HelpIntentHandler,
-  CancelAndStopIntentHandler,
-  SessionEndedRequestHandler
-).addErrorHandlers(MyErrorHandler).lambda;
+var handler = /* @__PURE__ */ __name(async (event, context) => {
+  const skillHandler = import_ask_sdk_core.SkillBuilders.custom().addRequestHandlers(
+    LaunchRequestHandler,
+    AskWeatherIntentHandler,
+    HelpIntentHandler,
+    CancelAndStopIntentHandler,
+    SessionEndedRequestHandler
+  ).addErrorHandlers(MyErrorHandler).lambda();
+  return new Promise((resolve, reject) => {
+    skillHandler(event, context, (err, response) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+}, "handler");
 export {
   handler
 };

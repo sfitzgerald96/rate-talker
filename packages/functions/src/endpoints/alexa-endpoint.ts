@@ -17,14 +17,13 @@ const LaunchRequestHandler: RequestHandler = {
     return request.type === 'LaunchRequest';
   },
   handle(handlerInput: HandlerInput) : Response {
-    const speechText = 'Welcome to your SDK weather skill. Ask me the weather!';
+    const speechText = 'Welcome to your rate talker skill. Ask me about mortgage rates!';
 
     const response = handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
-      .withSimpleCard('Welcome to your SDK weather skill. Ask me the weather!', speechText)
+      .withSimpleCard('Welcome to your rate talker skill. Ask me about mortgage rates!', speechText)
       .getResponse();
-    // console.log(response)
     return response
   },
 };
@@ -116,13 +115,36 @@ const MyErrorHandler : ErrorHandler = {
 //   return "WHERE ARE YOU RUNNING";
 // };
 
-export const handler = SkillBuilders.custom()
-  .addRequestHandlers(
-    LaunchRequestHandler,
-    AskWeatherIntentHandler,
-    HelpIntentHandler,
-    CancelAndStopIntentHandler,
-    SessionEndedRequestHandler,
-  )
-  .addErrorHandlers(MyErrorHandler)
-  .lambda;
+// export const handler = SkillBuilders.custom()
+//   .addRequestHandlers(
+//     LaunchRequestHandler,
+//     AskWeatherIntentHandler,
+//     HelpIntentHandler,
+//     CancelAndStopIntentHandler,
+//     SessionEndedRequestHandler,
+//   )
+//   .addErrorHandlers(MyErrorHandler)
+//   .lambda();
+
+export const handler = async (event: any, context: any) => {
+  const skillHandler = SkillBuilders.custom()
+    .addRequestHandlers(
+      LaunchRequestHandler,
+      AskWeatherIntentHandler,
+      HelpIntentHandler,
+      CancelAndStopIntentHandler,
+      SessionEndedRequestHandler
+    )
+    .addErrorHandlers(MyErrorHandler)
+    .lambda();
+
+  return new Promise((resolve, reject) => {
+    skillHandler(event, context, (err, response) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(response);
+      }
+    });
+  });
+};
