@@ -1,4 +1,5 @@
-import { StackContext, Api, use } from "sst/constructs";
+import { ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { StackContext, Api, use, Function } from "sst/constructs";
 import { Table } from "sst/constructs";
 
 export function DynamoDB({ stack, app }: {stack: any, app: any}) {
@@ -37,5 +38,16 @@ export function API({ stack }: StackContext) {
 
   stack.addOutputs({
     ApiEndpoint: api.url,
+  });
+}
+
+export function AlexaEndpoint({ stack }: StackContext) {
+  const skillLambda = new Function(stack, "RateTalkerAlexaSkill", {
+    handler: "packages/functions/src/endpoints/alexa-endpoint.handler",
+  });
+  skillLambda.addPermission('alexa-skills-kit-trigger', {
+    principal: new ServicePrincipal('alexa-appkit.amazon.com'),
+    action: 'lambda:invokeFunction',
+    eventSourceToken: "amzn1.ask.skill.8db4cf1c-e076-4fa7-a123-8c49c65ea3b9"
   });
 }

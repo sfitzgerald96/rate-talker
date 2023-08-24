@@ -43,23 +43,21 @@ export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
 });
 
 export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
-  const rootUrl = 'https://www.mortgagenewsdaily.com'
-  const resp = await fetch(`${rootUrl}/topic/mortgage-rates`)
-	const body = await resp.text();
-  const root = parse(body);
+  // const rootUrl = 'https://www.mortgagenewsdaily.com'
+  // const resp = await fetch(`${rootUrl}/topic/mortgage-rates`)
+	// const body = await resp.text();
+  // const root = parse(body);
 
-  const articleTitle = root.querySelector('div.row.article-list-section.category > div.col-md-8 > div.news-article-list > div:nth-child(1) > div.article-title > a')
-  const articleLink = `${rootUrl}${articleTitle?.rawAttributes.href}`
-  const articleDate = root.querySelector('div.row.article-list-section.category > div.col-md-8 > div.news-article-list > div:nth-child(1) > div.article-byline')?.text
+  // const articleTitle = root.querySelector('div.row.article-list-section.category > div.col-md-8 > div.news-article-list > div:nth-child(1) > div.article-title > a')
+  // const articleLink = `${rootUrl}${articleTitle?.rawAttributes.href}`
+  // const articleDate = root.querySelector('div.row.article-list-section.category > div.col-md-8 > div.news-article-list > div:nth-child(1) > div.article-byline')?.text
 
-  let a = moment(articleDate); 
-  console.log(a)
   // console.log(articleDate, articleLink)
 
   // const articleBody = root.querySelector('#pw > div.container > div > div.row.article-section > div.col-md-8 > div > div.article-body')
   // console.log(articleBody)
-  return {
-    statusCode: 200,
-    body: "mortgage article retrieved",
-  };
+  // return {
+  //   statusCode: 200,
+  //   body: "mortgage article retrieved",
+  // };
 });

@@ -18,4 +18,11 @@ declare module "sst/node/api" {
       url: string;
     }
   }
+}import "sst/node/function";
+declare module "sst/node/function" {
+  export interface FunctionResources {
+    "RateTalkerAlexaSkill": {
+      functionName: string;
+    }
+  }
 }

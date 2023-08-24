@@ -13,8 +13,11 @@ export interface RateType {
 export const update = async (
   rate: RateType
 ): Promise<any> => {
-  console.log("Starting update function")
-  // TODO: use momentJS to validate the date is in the correct format
+  const expectedDateFormat = 'M/D/YYYY';
+  // if (!moment(rate.rateDate, expectedDateFormat, true).isValid()) {
+  //   throw new Error(`Invalid Date Format: Expected MM/DD/YYYY. Got ${rate.rateDate}`)
+  //   // TODO: use momentJS to validate the date is in the correct format
+  // }
   const dynamoDb = new DynamoDB.DocumentClient();
 
   const params: DynamoDB.DocumentClient.UpdateItemInput = {
