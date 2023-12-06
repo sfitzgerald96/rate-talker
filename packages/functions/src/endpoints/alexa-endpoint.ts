@@ -28,49 +28,61 @@ const LaunchRequestHandler: RequestHandler = {
   },
 };
 
-const AskWeatherIntentHandler : RequestHandler = {
-  canHandle(handlerInput : HandlerInput) : boolean {
+const  ReadMortgageInsightsIntentHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) : boolean {
     const request = handlerInput.requestEnvelope.request;  
     return request.type === 'IntentRequest'
-      && request.intent.name === 'AskWeatherIntent';
+      && request.intent.name === 'ReadMortgageInsights';
   },
   handle(handlerInput : HandlerInput) : Response {
-    const speechText = 'The weather today is sunny.';
+    const speechText = 'Here is the article:';
 
-    console.log(speechText)
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard('The weather today is sunny.', speechText)
+      .withSimpleCard('Here is the article:', speechText)
       .getResponse();
   },
 };
 
-const HelpIntentHandler : RequestHandler = {
-  canHandle(handlerInput : HandlerInput) : boolean {
+const GetMortgageRatesIntentHandler : RequestHandler = {
+  canHandle(handlerInput: HandlerInput) : boolean {
+    const request = handlerInput.requestEnvelope.request;  
+    return request.type === 'IntentRequest'
+      && request.intent.name === 'GetMortgageRates';
+  },
+  handle(handlerInput: HandlerInput) : Response {
+    const speechText = 'The thirty year mortgage is 7.37% and the fifteen year mortgage is 6.76%.';
+
+    return handlerInput.responseBuilder
+      .speak(speechText)
+      .withSimpleCard('The thirty year mortgage is 7.37% and the fifteen year mortgage is 6.76%.', speechText)
+      .getResponse();
+  },
+};
+
+const HelpIntentHandler: RequestHandler = {
+  canHandle(handlerInput: HandlerInput) : boolean {
     const request = handlerInput.requestEnvelope.request;    
     return request.type === 'IntentRequest'
       && request.intent.name === 'AMAZON.HelpIntent';
   },
-  handle(handlerInput : HandlerInput) : Response {
-    const speechText = 'You can ask me the weather!';
+  handle(handlerInput: HandlerInput) : Response {
+    const speechText = 'You can ask me about mortgage rates!';
 
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
-      .withSimpleCard('You can ask me the weather!', speechText)
+      .withSimpleCard('You can ask me about mortgage rates!', speechText)
       .getResponse();
   },
 };
 
 const CancelAndStopIntentHandler : RequestHandler = {
-  canHandle(handlerInput : HandlerInput) : boolean {
+  canHandle(handlerInput: HandlerInput) : boolean {
     const request = handlerInput.requestEnvelope.request;
     return request.type === 'IntentRequest'
       && (request.intent.name === 'AMAZON.CancelIntent'
-         || request.intent.name === 'AMAZON.StopIntent'
-         || request.intent.name === "AMAZON.NavigateHomeIntent"
-         || request.intent.name === "AMAZON.FallbackIntent");
-
+         || request.intent.name === 'AMAZON.StopIntent');
   },
   handle(handlerInput : HandlerInput) : Response {
     const speechText = 'Goodbye!';
@@ -84,7 +96,7 @@ const CancelAndStopIntentHandler : RequestHandler = {
 };
 
 const SessionEndedRequestHandler : RequestHandler = {
-  canHandle(handlerInput : HandlerInput) : boolean {
+  canHandle(handlerInput: HandlerInput) : boolean {
     const request = handlerInput.requestEnvelope.request;    
     return request.type === 'SessionEndedRequest';
   },
@@ -96,7 +108,7 @@ const SessionEndedRequestHandler : RequestHandler = {
 };
 
 const MyErrorHandler : ErrorHandler = {
-  canHandle(handlerInput : HandlerInput, error : Error ) : boolean {
+  canHandle(handlerInput: HandlerInput, error : Error ) : boolean {
     return true;
   },
   handle(handlerInput : HandlerInput, error : Error) : Response {
@@ -126,11 +138,12 @@ const MyErrorHandler : ErrorHandler = {
 //   .addErrorHandlers(MyErrorHandler)
 //   .lambda();
 
-export const handler = async (event: any, context: any) => {
+export const handler: Handler = async (event: any, context: any) => {
   const skillHandler = SkillBuilders.custom()
     .addRequestHandlers(
       LaunchRequestHandler,
-      AskWeatherIntentHandler,
+      GetMortgageRatesIntentHandler,
+      ReadMortgageInsightsIntentHandler,
       HelpIntentHandler,
       CancelAndStopIntentHandler,
       SessionEndedRequestHandler

@@ -6,6 +6,7 @@ export interface RateType {
   rateDate: string,
   thirtyYrFixedMortgage?: string,
   mortgageArticle?: string,
+  mortgageArticleTitle?: string,
   fifteenYrFixedMortgage?: string,
   tenYrTreasury?: string,
 }
@@ -13,11 +14,6 @@ export interface RateType {
 export const update = async (
   rate: RateType
 ): Promise<any> => {
-  const expectedDateFormat = 'M/D/YYYY';
-  // if (!moment(rate.rateDate, expectedDateFormat, true).isValid()) {
-  //   throw new Error(`Invalid Date Format: Expected MM/DD/YYYY. Got ${rate.rateDate}`)
-  //   // TODO: use momentJS to validate the date is in the correct format
-  // }
   const dynamoDb = new DynamoDB.DocumentClient();
 
   const params: DynamoDB.DocumentClient.UpdateItemInput = {
@@ -25,10 +21,11 @@ export const update = async (
     Key: {
       "rateDate": rate.rateDate,
     },
-    UpdateExpression: 'set thirtyYrFixedMortgage = :thirty, mortgageArticle = :article, fifteenYrFixedMortgage = :fifteen, tenYrTreasury = :ten',
+    UpdateExpression: 'set thirtyYrFixedMortgage = :thirty, mortgageArticle = :article, mortgageArticleTitle = :articleTitle, fifteenYrFixedMortgage = :fifteen, tenYrTreasury = :ten',
     ExpressionAttributeValues: {
       ':thirty': rate.thirtyYrFixedMortgage || "",
       ':article': rate.mortgageArticle || "",
+      ':articleTitle': rate.mortgageArticleTitle || "",
       ':fifteen': rate.fifteenYrFixedMortgage || "",
       ':ten': rate.tenYrTreasury || "",
     }

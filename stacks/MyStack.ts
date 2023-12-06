@@ -30,7 +30,6 @@ export function API({ stack }: StackContext) {
     },
     routes: {
       "GET /": "packages/functions/src/jobs/mortgage-rates.scrapeAndStoreRates",
-      "GET /15": "packages/functions/src/jobs/mortgage-rates.scrapeAndStoreFifteenRate",
       "GET /mortgage-articles": "packages/functions/src/jobs/mortgage-rates.scrapeAndStoreArticle",
       "GET /treasury-rates": "packages/functions/src/jobs/treasury-rates.scrapeAndStoreRates",
     },
@@ -49,5 +48,11 @@ export function AlexaEndpoint({ stack }: StackContext) {
     principal: new ServicePrincipal('alexa-appkit.amazon.com'),
     action: 'lambda:invokeFunction',
     eventSourceToken: "amzn1.ask.skill.8db4cf1c-e076-4fa7-a123-8c49c65ea3b9"
+  });
+}
+
+export function RatesEndpoint({ stack }: StackContext) {
+  const ratesLambda = new Function(stack, "rates", {
+    handler: "packages/functions/src/endpoints/rates-endpoint.handler",
   });
 }

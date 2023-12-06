@@ -1,5 +1,5 @@
 import { SSTConfig } from "sst";
-import { API, AlexaEndpoint, DynamoDB } from "./stacks/MyStack";
+import { API, AlexaEndpoint, DynamoDB, RatesEndpoint } from "./stacks/MyStack.js";
 
 export default {
   config(_input) {
@@ -12,5 +12,6 @@ export default {
     app.stack(DynamoDB);
     app.stack(API);
     app.stack(AlexaEndpoint);
+    app.stack(RatesEndpoint)
   }
 } satisfies SSTConfig;

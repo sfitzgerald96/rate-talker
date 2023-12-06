@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node16/tsconfig.json",
   "exclude": ["packages"],
   "compilerOptions": {
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "lib": ["DOM"],
   },
 }
