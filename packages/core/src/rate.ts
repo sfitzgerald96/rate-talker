@@ -1,5 +1,6 @@
 export * as Rate from "./rate";
 import { DynamoDB, Request } from "aws-sdk";
+import moment from "moment";
 import { Table } from "sst/node/table";
 
 export interface RateType {
@@ -34,7 +35,7 @@ export const update = async (
   return dynamoDb.update(params).promise()
 }
 
-export const findOrCreate = async (rateDate: string): Promise<any> => {
+export const findOrCreate = async (rateDate: string = moment().format('MM/DD/YYYY')): Promise<any> => {
   const dynamoDb = new DynamoDB.DocumentClient();
 
   const findParams = {

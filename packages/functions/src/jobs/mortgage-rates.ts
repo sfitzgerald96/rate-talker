@@ -1,7 +1,7 @@
 import { ApiHandler } from "sst/node/api";
 import { Rate, RateType } from "@my-sst-app/core/rate";
 import fetch from 'node-fetch';
-import { HTMLElement, NodeType, parse } from 'node-html-parser';
+import { parse } from 'node-html-parser';
 import moment from "moment";
 
 export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
@@ -10,17 +10,24 @@ export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
   const root = parse(body);
   
   const rateDate = root.querySelector('div.current-mtg-rate > div.rate-date.pull-right')?.text.trim() || '';
+
+  if (rateDate !== moment().format('M/D/YYYY')) {
+    return { statusCode: 200, body: "Mortgage rate has not posted for today."}
+  }
+
   const fifteenRate = root.querySelector('div.row.rate-page > div > table > tbody > tr:nth-child(2) > td:nth-child(2)')?.text.trim().replaceAll('%', '');
   const thirtyRate = root.querySelector('div.current-mtg-rate > div.rate')?.text.trim().replaceAll('%', '');
 
-  let rateItem: RateType = JSON.parse(await Rate.findOrCreate(moment(rateDate).format('MM/DD/YYYY')))
+  let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
   rateItem.fifteenYrFixedMortgage = fifteenRate;
   rateItem.thirtyYrFixedMortgage = thirtyRate;
 
   await Rate.update(rateItem).then((data) => {
     console.log('updated', data)
+    return data
   }).catch((err) => {
     console.log('error', err)
+    return err
   });
 });
 
@@ -29,6 +36,10 @@ export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
 	const body = await resp.text();
   const root = parse(body);
 
+  // TODO: return early if there is no article for the day
+  // if (rateDate !== moment().format('M/D/YYYY')) {
+  //   return { statusCode: 200, body: "Mortgage rate has not posted for today."}
+  // }
   const articleTitle = root.querySelector('div.row.article-section div.article-title')?.text.trim()
   let articleBody = root.querySelector('div.row.article-section div.article-body')
   const advertisement = articleBody?.querySelector('div.cobrand-hide')
@@ -39,7 +50,7 @@ export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
 
   const sanitizedBody = articleBody?.structuredText.trim()
 
-  let rateItem: RateType = JSON.parse(await Rate.findOrCreate(moment().format('MM/DD/YYYY')))
+  let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
   rateItem.mortgageArticle = sanitizedBody
   rateItem.mortgageArticleTitle = articleTitle
 

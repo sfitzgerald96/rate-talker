@@ -31,7 +31,7 @@ export function API({ stack }: StackContext) {
     routes: {
       "GET /": "packages/functions/src/jobs/mortgage-rates.scrapeAndStoreRates",
       "GET /mortgage-articles": "packages/functions/src/jobs/mortgage-rates.scrapeAndStoreArticle",
-      "GET /treasury-rates": "packages/functions/src/jobs/treasury-rates.scrapeAndStoreRates",
+      "GET /treasury-rates": "packages/functions/src/jobs/treasury-rates.getTenYrTreasury",
     },
   });
 

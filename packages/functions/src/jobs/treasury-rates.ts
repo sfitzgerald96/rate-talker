@@ -1,11 +1,40 @@
 import { ApiHandler } from "sst/node/api";
-import { Rate } from "@my-sst-app/core/rate";
+import { Rate, RateType } from "@my-sst-app/core/rate";
+import fetch from "node-fetch";
 
-export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
-  // await Rate.findOrCreate();
+type TenYrTreasuryResponse = {
+  FormattedQuoteResult: {
+    FormattedQuote: {
+      symbol: string,
+      symbolType: string,
+      name: string,
+      shortName: string,
+      last: string,
+      last_timedate: string,
+      changetype: string,
+      open: string,
+      high: string,
+      low: string,
+      change: string,
+      change_pct: string,
+      previous_day_closing: string,
+      realTime: string
+    }[]
+  }
+}
 
-  return {
-    statusCode: 200,
-    body: "Treasury yields created/updated",
-  };
+export const getTenYrTreasury = ApiHandler(async (_evt) => {
+  let shortenedUrl = "https://quote.cnbc.com/quote-html-webservice/restQuote/symbolType/symbol?symbols=US10Y&output=json"
+  const resp = await fetch(shortenedUrl)
+  const tenYrTreasuryResp = await resp.json() as TenYrTreasuryResponse;
+
+  // TODO: look more closely into this findOrCreate function to see if we can just create for the day that was specified in the cnbc response
+  let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
+  rateItem.tenYrTreasury = tenYrTreasuryResp.FormattedQuoteResult.FormattedQuote[0].last
+
+  await Rate.update(rateItem).then((data) => {
+    console.log('updated', data)
+  }).catch((err) => {
+    console.log('error', err)
+  });
 });
