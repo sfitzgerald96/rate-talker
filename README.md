@@ -1,5 +1,5 @@
 # rate-talker
-Gathers treasury information and mortgage rate data
+Gathers treasury information and mortgage rate data. Presents it via Alexa skills.
 
 Cronjobs
 - Mortgage Rate scraper
