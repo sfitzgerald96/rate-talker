@@ -1,3 +1,4 @@
+import { Rate, RateType } from '@my-sst-app/core/rate';
 import {
   ErrorHandler,
   HandlerInput,
@@ -9,6 +10,7 @@ import {
   SessionEndedRequest,
 } from 'ask-sdk-model';
 import { Handler } from 'aws-lambda';
+import moment from 'moment';
 
 const LaunchRequestHandler: RequestHandler = {
   canHandle(handlerInput: HandlerInput) : boolean {
@@ -28,7 +30,7 @@ const LaunchRequestHandler: RequestHandler = {
   },
 };
 
-const  ReadMortgageInsightsIntentHandler: RequestHandler = {
+const ReadMortgageInsightsIntentHandler: RequestHandler = {
   canHandle(handlerInput: HandlerInput) : boolean {
     const request = handlerInput.requestEnvelope.request;  
     return request.type === 'IntentRequest'
@@ -50,12 +52,30 @@ const GetMortgageRatesIntentHandler : RequestHandler = {
     return request.type === 'IntentRequest'
       && request.intent.name === 'GetMortgageRates';
   },
-  handle(handlerInput: HandlerInput) : Response {
-    const speechText = 'The thirty year mortgage is 7.37% and the fifteen year mortgage is 6.76%.';
+  async handle(handlerInput: HandlerInput) : Promise<Response> {
+    let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
+    
+    let speechText = ''
+    if (rateItem.rateDate !== moment().format('MM/DD/YYYY')) {
+      speechText = `Today's rates have not been recorded yet. Rates are typically posted on weekdays by 6pm ET. 
+      However, I do have rates for ${rateItem.rateDate}, which are as follows:`
+    }
+    if (rateItem.thirtyYrFixedMortgage) {
+      speechText += `Thirty year mortgage is ${rateItem.thirtyYrFixedMortgage}%.`
+    }
+    if (rateItem.fifteenYrFixedMortgage) {
+      speechText += `Fifteen year mortgage is ${rateItem.fifteenYrFixedMortgage}%.`
+    }
+    if (rateItem.tenYrTreasury) {
+      speechText += `Ten year treasury is ${rateItem.tenYrTreasury}%.`
+    }
+    if (rateItem.mortgageArticle && rateItem.mortgageArticleTitle) {
+      speechText += `Mortgage Insights written by Matthew Graham is titled ${rateItem.mortgageArticle}. It reads: "${rateItem.mortgageArticle}`;
+    }
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard('The thirty year mortgage is 7.37% and the fifteen year mortgage is 6.76%.', speechText)
+      .withSimpleCard(`The thirty year mortgage is ${rateItem.thirtyYrFixedMortgage}% and the fifteen year mortgage is ${rateItem.fifteenYrFixedMortgage}%...`, speechText)
       .getResponse();
   },
 };

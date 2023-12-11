@@ -41,7 +41,10 @@ export function API({ stack }: StackContext) {
 }
 
 export function AlexaEndpoint({ stack }: StackContext) {
+  const { table } = use(DynamoDB)
+
   const skillLambda = new Function(stack, "RateTalkerAlexaSkill", {
+    bind: [table],
     handler: "packages/functions/src/endpoints/alexa-endpoint.handler",
   });
   skillLambda.addPermission('alexa-skills-kit-trigger', {
