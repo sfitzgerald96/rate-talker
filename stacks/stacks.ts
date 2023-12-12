@@ -36,6 +36,8 @@ export function DataCollectionJobs({ stack }: StackContext) {
     bind: [table],
     handler: "packages/functions/src/jobs/treasury-rates.getTenYrTreasury",
   });
+  // TODO: Read up on how AWS manages daylight savings with its cron: https://docs.aws.amazon.com/scheduler/latest/UserGuide/schedule-types.html
+
   // Historically, Mortgage News Daily (MND) releases its rates and articles between 5pm and 7pm
   // When on Standard time, run cron every half hour between 4pm and 7pm EST
   // When on Daylight time, run cron every half hour between 5pm and 8pm EDT

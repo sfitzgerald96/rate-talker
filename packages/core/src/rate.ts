@@ -3,6 +3,7 @@ import { DynamoDB, Request } from "aws-sdk";
 import moment from "moment";
 import { Table } from "sst/node/table";
 
+// TODO: Refactor this file into a functions/src/models/ folder
 export interface RateType {
   rateDate: string,
   thirtyYrFixedMortgage?: string,
@@ -62,6 +63,7 @@ export const findOrCreate = async (rateDate: string = moment().format('MM/DD/YYY
   return JSON.stringify(putParams.Item)
 }
 
+// TODO: use timezone of client
 export const findMostRecentlyAvailableRate = async (): Promise<any> => {
   const dynamoDb = new DynamoDB.DocumentClient();
 

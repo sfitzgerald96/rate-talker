@@ -53,46 +53,50 @@ const GetMortgageRatesIntentHandler : RequestHandler = {
       && request.intent.name === 'GetMortgageRates';
   },
   async handle(handlerInput: HandlerInput) : Promise<Response> {
+    // TODO: Refactor this code logic into a functions/src/services/RateProcessor.ts class
+    const rateMetrics: {
+      name: keyof RateType,
+      label: string
+    }[] = [
+      { name: 'thirtyYrFixedMortgage', label: 'Thirty year mortgage' },
+      { name: 'fifteenYrFixedMortgage', label: 'Fifteen year mortgage' },
+      { name: 'tenYrTreasury', label: 'Ten year treasury' },
+      { name: 'mortgageArticle', label: 'Mortgage Insights Article' },
+    ];
+
+    // TODO: pass timezone of client in for dependency injection
     let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
 
     let introText = ''
-    let rateText = ''
-    let unreleasedMetrics = []
+    // TODO: use timezone of client
     if (rateItem.rateDate === moment().format('MM/DD/YYYY')) {
-      introText = `Today's rates are as follows: `
+      introText = `Today's rates are as follows: `;
     } else {
       introText = `Today's rates have not been recorded yet. Rates are typically posted on weekdays by 6pm ET. 
-      However, I do have rates for ${rateItem.rateDate}, which are as follows: `
-    }
-    if (rateItem.thirtyYrFixedMortgage) {
-      rateText += `Thirty year mortgage is ${rateItem.thirtyYrFixedMortgage}%. `
-    } else {
-      unreleasedMetrics.push('Thirty year mortgage')
-    }
-    if (rateItem.fifteenYrFixedMortgage) {
-      rateText += `Fifteen year mortgage is ${rateItem.fifteenYrFixedMortgage}%. `
-    } else {
-      unreleasedMetrics.push('Fifteen year mortgage')
-    }
-    if (rateItem.tenYrTreasury) {
-      rateText += `Ten year treasury is ${rateItem.tenYrTreasury}%. `
-    } else {
-      unreleasedMetrics.push('Ten year treasury')
-    }
-    if (rateItem.mortgageArticle && rateItem.mortgageArticleTitle) {
-      rateText += `Mortgage Insights written by Matthew Graham is titled "${rateItem.mortgageArticleTitle}". It reads: "${rateItem.mortgageArticle}"`;
-    } else {
-      unreleasedMetrics.push('Mortgage Insights Article')
+        However, I do have rates for ${rateItem.rateDate}, which are as follows: `;
     }
 
+    let rateText = ''
+    let unreleasedMetrics: string[] = []
+
+    rateMetrics.forEach(metric => {
+      const rateValue = rateItem[metric.name];
+      if (rateValue !== undefined) {
+        rateText += `${metric.label} is ${rateValue}%. `;
+      } else {
+        unreleasedMetrics.push(metric.label);
+      }
+    })
+
     let speechText = ''
-    if (rateText && unreleasedMetrics.length > 0) {
-      speechText = introText + rateText
-      speechText += `Please note that the following metrics have not yet been recorded: ${unreleasedMetrics.join(', ')}`
-    } else if (rateText) {
-      speechText = introText + rateText
+    if (rateText) {
+      speechText = introText + rateText;
+    
+      if (unreleasedMetrics.length > 0) {
+        speechText += `Please note that the following metrics have not yet been recorded: ${unreleasedMetrics.join(', ')}`;
+      }
     } else {
-      speechText = 'There was an error retrieving rates.'
+      speechText = 'There was an error retrieving rates.';
     }
 
     return handlerInput.responseBuilder
