@@ -28,7 +28,6 @@ export const getTenYrTreasury = ApiHandler(async (_evt) => {
   const resp = await fetch(shortenedUrl)
   const tenYrTreasuryResp = await resp.json() as TenYrTreasuryResponse;
 
-  // TODO: look more closely into this findOrCreate function to see if we can just create for the day that was specified in the cnbc response
   let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
   rateItem.tenYrTreasury = tenYrTreasuryResp.FormattedQuoteResult.FormattedQuote[0].last.replace("%", "")
 

@@ -54,28 +54,50 @@ const GetMortgageRatesIntentHandler : RequestHandler = {
   },
   async handle(handlerInput: HandlerInput) : Promise<Response> {
     let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
-    
-    let speechText = ''
-    if (rateItem.rateDate !== moment().format('MM/DD/YYYY')) {
-      speechText = `Today's rates have not been recorded yet. Rates are typically posted on weekdays by 6pm ET. 
-      However, I do have rates for ${rateItem.rateDate}, which are as follows:`
+
+    let introText = ''
+    let rateText = ''
+    let unreleasedMetrics = []
+    if (rateItem.rateDate === moment().format('MM/DD/YYYY')) {
+      introText = `Today's rates are as follows: `
+    } else {
+      introText = `Today's rates have not been recorded yet. Rates are typically posted on weekdays by 6pm ET. 
+      However, I do have rates for ${rateItem.rateDate}, which are as follows: `
     }
     if (rateItem.thirtyYrFixedMortgage) {
-      speechText += `Thirty year mortgage is ${rateItem.thirtyYrFixedMortgage}%.`
+      rateText += `Thirty year mortgage is ${rateItem.thirtyYrFixedMortgage}%. `
+    } else {
+      unreleasedMetrics.push('Thirty year mortgage')
     }
     if (rateItem.fifteenYrFixedMortgage) {
-      speechText += `Fifteen year mortgage is ${rateItem.fifteenYrFixedMortgage}%.`
+      rateText += `Fifteen year mortgage is ${rateItem.fifteenYrFixedMortgage}%. `
+    } else {
+      unreleasedMetrics.push('Fifteen year mortgage')
     }
     if (rateItem.tenYrTreasury) {
-      speechText += `Ten year treasury is ${rateItem.tenYrTreasury}%.`
+      rateText += `Ten year treasury is ${rateItem.tenYrTreasury}%. `
+    } else {
+      unreleasedMetrics.push('Ten year treasury')
     }
     if (rateItem.mortgageArticle && rateItem.mortgageArticleTitle) {
-      speechText += `Mortgage Insights written by Matthew Graham is titled ${rateItem.mortgageArticle}. It reads: "${rateItem.mortgageArticle}`;
+      rateText += `Mortgage Insights written by Matthew Graham is titled "${rateItem.mortgageArticleTitle}". It reads: "${rateItem.mortgageArticle}"`;
+    } else {
+      unreleasedMetrics.push('Mortgage Insights Article')
+    }
+
+    let speechText = ''
+    if (rateText && unreleasedMetrics.length > 0) {
+      speechText = introText + rateText
+      speechText += `Please note that the following metrics have not yet been recorded: ${unreleasedMetrics.join(', ')}`
+    } else if (rateText) {
+      speechText = introText + rateText
+    } else {
+      speechText = 'There was an error retrieving rates.'
     }
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard(`The thirty year mortgage is ${rateItem.thirtyYrFixedMortgage}% and the fifteen year mortgage is ${rateItem.fifteenYrFixedMortgage}%...`, speechText)
+      .withSimpleCard(`Today's Rates:`, speechText)
       .getResponse();
   },
 };
