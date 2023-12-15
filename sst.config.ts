@@ -1,5 +1,5 @@
 import { SSTConfig } from "sst";
-import { AlexaEndpoint, DataCollectionJobs, DynamoDB} from "./stacks/stacks.js";
+import { AlexaSkill, DataCollectionJobs, DynamoDB} from "./stacks/stacks.js";
 
 export default {
   config(_input) {
@@ -11,6 +11,6 @@ export default {
   stacks(app) {
     app.stack(DynamoDB);
     app.stack(DataCollectionJobs);
-    app.stack(AlexaEndpoint);
+    app.stack(AlexaSkill);
   }
 } satisfies SSTConfig;

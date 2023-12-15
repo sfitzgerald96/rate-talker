@@ -1,0 +1,91 @@
+{
+  "interactionModel": {
+    "languageModel": {
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": []
+        },
+        {
+          "slots": [],
+          "name": "HelloWorldIntent",
+          "samples": [
+            "hello",
+            "how are you",
+            "say hi world",
+            "say hi",
+            "hi",
+            "say hello world",
+            "say hello"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.ReadAction\u003cobject@Calendar\u003e",
+          "samples": []
+        },
+        {
+          "slots": [
+            {
+              "name": "date",
+              "type": "AMAZON.DATE"
+            }
+          ],
+          "name": "GetMortgageRates",
+          "samples": [
+            "Do you know what mortgage rates are",
+            "What are mortgage rates",
+            "What was mortgage rates on {date}",
+            "What were mortgage rates on {date}",
+            "What were mortgage rates {date}",
+            "What are mortgage rates {date}",
+            "What\u0027s the mortgage rate {date}",
+            "What was the report for the mortgage rates on {date}",
+            "What was the rate of the mortgage on {date}",
+            "Do you know what the mortgage rate was on {date}",
+            "What was the mortgage rate on {date}"
+          ]
+        },
+        {
+          "slots": [
+            {
+              "name": "date",
+              "type": "AMAZON.DATE"
+            }
+          ],
+          "name": "ReadMortgageInsights",
+          "samples": [
+            "Read {date} mortgage insights"
+          ]
+        },
+        {
+          "slots": [],
+          "name": "AskWeatherIntent",
+          "samples": [
+            "what\u0027s it like out",
+            "what is it like out",
+            "what\u0027s the weather",
+            "what is the weather"
+          ]
+        }
+      ],
+      "types": [],
+      "invocationName": "rate talker"
+    }
+  }
+}

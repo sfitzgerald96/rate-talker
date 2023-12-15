@@ -1,6 +1,8 @@
 import * as events from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
 import { ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { SecretValue } from "aws-cdk-lib/core";
+import { Skill } from "cdk-alexa-skill";
 import { StackContext, use, Function } from "sst/constructs";
 import { Table } from "sst/constructs";
 
@@ -50,12 +52,12 @@ export function DataCollectionJobs({ stack }: StackContext) {
     })
   })
   // Bond Market typically closes at 5pm
-  // When on Standard time, run cron every hour between 4pm and 5pm EST
-  // When on Daylight time, run cron every hour between 5pm and 6pm EDT
+  // When on Standard time, run cron every hour between 8am and 5pm EST
+  // When on Daylight time, run cron every hour between 9pm and 6pm EDT
   const tenYrTreasuryCron = new events.Rule(stack, 'tenYrTreasuryCron', {
     schedule: events.Schedule.cron({
       minute: "0",
-      hour: "21-22",
+      hour: "13-22",
       weekDay: "1-5",
       month: "*",
     })
@@ -66,16 +68,49 @@ export function DataCollectionJobs({ stack }: StackContext) {
   tenYrTreasuryCron.addTarget(new LambdaFunction(tenYrTreasuryFn))
 }
 
-export function AlexaEndpoint({ stack }: StackContext) {
+export function AlexaSkill({ stack }: StackContext) {
   const { table } = use(DynamoDB)
+
+  // Get Alexa Developer credentials from SSM Parameter Store/Secrets Manager.
+  // NOTE: Parameters and secrets must have been created in the appropriate account before running `cdk deploy` on this stack.
+  //       See sample script at scripts/upload-credentials.sh for how to create appropriate resources via AWS CLI.
+  const alexaVendorId = process.env.ALEXA_VENDOR_ID
+  if (!alexaVendorId) {
+    throw new Error("Undefined environment variable: ALEXA_VENDOR_ID")
+  } 
+
+  const lwaClientId = process.env.LWA_CLIENT_ID
+  if (!lwaClientId) {
+    throw new Error("Undefined environment variable: LWA_CLIENT_ID")
+  }
+
+  if (!process.env.LWA_CLIENT_SECRET) {
+    throw new Error("Undefined environment variable: LWA_CLIENT_SECRET")
+  }
+  const lwaClientSecret = SecretValue.unsafePlainText(process.env.LWA_CLIENT_SECRET)
+
+  if (!process.env.LWA_REFRESH_TOKEN) {
+    throw new Error("Undefined environment variable: LWA_REFRESH_TOKEN")
+  } 
+  const lwaRefreshToken = SecretValue.unsafePlainText(process.env.LWA_REFRESH_TOKEN)
 
   const skillLambda = new Function(stack, "RateTalkerAlexaSkill", {
     bind: [table],
     handler: "packages/functions/src/endpoints/alexa-endpoint.handler",
   });
-  skillLambda.addPermission('alexa-skills-kit-trigger', {
-    principal: new ServicePrincipal('alexa-appkit.amazon.com'),
-    action: 'lambda:invokeFunction',
-    eventSourceToken: "amzn1.ask.skill.8db4cf1c-e076-4fa7-a123-8c49c65ea3b9"
+
+  // skillLambda.addPermission('alexa-skills-kit-trigger', {
+  //   principal: new ServicePrincipal('alexa-appkit.amazon.com'),
+  //   action: 'lambda:invokeFunction',
+  //   eventSourceToken: "amzn1.ask.skill.8db4cf1c-e076-4fa7-a123-8c49c65ea3b9"
+  // });
+
+  const skill = new Skill(stack, 'Skill', {
+    endpointLambdaFunction: skillLambda,
+    skillPackagePath: 'skill-package',
+    alexaVendorId: alexaVendorId,
+    lwaClientId: lwaClientId,
+    lwaClientSecret: lwaClientSecret,
+    lwaRefreshToken: lwaRefreshToken
   });
 }

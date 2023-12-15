@@ -22,7 +22,9 @@
     "packages/*"
   ],
   "dependencies": {
+    "ask-cli": "^2.30.6",
     "aws-sdk": "^2.1424.0",
+    "cdk-alexa-skill": "^2.0.4",
     "moment": "^2.29.4",
     "node-fetch": "^3.3.2",
     "node-html-parser": "^6.1.5"

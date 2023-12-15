@@ -17,3 +17,5 @@ Cronjobs
   - scrapes and checks current rate
     - Yes: Update record
     - No: Exit
+
+npx ask util generate-lwa-tokens --client-id "<your Client ID>" --client-confirmation "<your Client Secret>" --scopes "alexa::ask:skills:readwrite alexa::ask:models:readwrite"
