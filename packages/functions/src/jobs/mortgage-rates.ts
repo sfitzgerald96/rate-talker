@@ -11,7 +11,7 @@ export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
   
   const rateDate = root.querySelector('div.current-mtg-rate > div.rate-date.pull-right')?.text.trim() || '';
 
-  if (rateDate !== moment().format('M/D/YYYY')) {
+  if (rateDate !== moment().tz(Rate.TIMEZONE).format('M/D/YYYY')) {
     return { statusCode: 200, body: "Mortgage rate has not posted for today."}
   }
 
@@ -32,7 +32,7 @@ export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
 });
 
 export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
-  const resp = await fetch(`https://www.mortgagenewsdaily.com/markets/mortgage-rates-${moment().format('MMDDYYYY')}`)
+  const resp = await fetch(`https://www.mortgagenewsdaily.com/markets/mortgage-rates-${moment().tz(Rate.TIMEZONE).format('MMDDYYYY')}`)
 	const body = await resp.text();
   const root = parse(body);
 

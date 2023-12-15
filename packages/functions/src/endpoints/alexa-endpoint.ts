@@ -1,4 +1,5 @@
 import { Rate, RateType } from '@my-sst-app/core/rate';
+import { RateAttrsToSpeech, RateSpeechGenerator } from '@my-sst-app/core/rate-speech-generator';
 import {
   ErrorHandler,
   HandlerInput,
@@ -10,12 +11,10 @@ import {
   SessionEndedRequest,
 } from 'ask-sdk-model';
 import { Handler } from 'aws-lambda';
-import moment from 'moment';
 
 const LaunchRequestHandler: RequestHandler = {
   canHandle(handlerInput: HandlerInput) : boolean {
     const request = handlerInput.requestEnvelope.request;
-    // console.log("REQUEST", request)
     return request.type === 'LaunchRequest';
   },
   handle(handlerInput: HandlerInput) : Response {
@@ -53,51 +52,15 @@ const GetMortgageRatesIntentHandler : RequestHandler = {
       && request.intent.name === 'GetMortgageRates';
   },
   async handle(handlerInput: HandlerInput) : Promise<Response> {
-    // TODO: Refactor this code logic into a functions/src/services/RateProcessor.ts class
-    const rateMetrics: {
-      name: keyof RateType,
-      label: string
-    }[] = [
+    let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
+
+    const rateAttrsToSpeech: RateAttrsToSpeech[] = [
       { name: 'thirtyYrFixedMortgage', label: 'Thirty year mortgage' },
       { name: 'fifteenYrFixedMortgage', label: 'Fifteen year mortgage' },
       { name: 'tenYrTreasury', label: 'Ten year treasury' },
-      { name: 'mortgageArticle', label: 'Mortgage Insights Article' },
     ];
-
-    // TODO: pass timezone of client in for dependency injection
-    let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
-
-    let introText = ''
-    // TODO: use timezone of client
-    if (rateItem.rateDate === moment().format('MM/DD/YYYY')) {
-      introText = `Today's rates are as follows: `;
-    } else {
-      introText = `Today's rates have not been recorded yet. Rates are typically posted on weekdays by 6pm ET. 
-        However, I do have rates for ${rateItem.rateDate}, which are as follows: `;
-    }
-
-    let rateText = ''
-    let unreleasedMetrics: string[] = []
-
-    rateMetrics.forEach(metric => {
-      const rateValue = rateItem[metric.name];
-      if (rateValue !== undefined) {
-        rateText += `${metric.label} is ${rateValue}%. `;
-      } else {
-        unreleasedMetrics.push(metric.label);
-      }
-    })
-
-    let speechText = ''
-    if (rateText) {
-      speechText = introText + rateText;
-    
-      if (unreleasedMetrics.length > 0) {
-        speechText += `Please note that the following metrics have not yet been recorded: ${unreleasedMetrics.join(', ')}`;
-      }
-    } else {
-      speechText = 'There was an error retrieving rates.';
-    }
+    const rateSpeechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech);
+    const speechText = rateSpeechGenerator.generateSpeech();
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -166,23 +129,6 @@ const MyErrorHandler : ErrorHandler = {
       .getResponse();
   }
 };
-
-// export const handler: Handler = async (event, context) => {
-//   console.log("WHERE ARE YOU RUNNING")
-//   console.log('EVENT: \n' + JSON.stringify(event, null, 2));
-//   return "WHERE ARE YOU RUNNING";
-// };
-
-// export const handler = SkillBuilders.custom()
-//   .addRequestHandlers(
-//     LaunchRequestHandler,
-//     AskWeatherIntentHandler,
-//     HelpIntentHandler,
-//     CancelAndStopIntentHandler,
-//     SessionEndedRequestHandler,
-//   )
-//   .addErrorHandlers(MyErrorHandler)
-//   .lambda();
 
 export const handler: Handler = async (event: any, context: any) => {
   const skillHandler = SkillBuilders.custom()

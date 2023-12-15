@@ -99,12 +99,6 @@ export function AlexaSkill({ stack }: StackContext) {
     handler: "packages/functions/src/endpoints/alexa-endpoint.handler",
   });
 
-  // skillLambda.addPermission('alexa-skills-kit-trigger', {
-  //   principal: new ServicePrincipal('alexa-appkit.amazon.com'),
-  //   action: 'lambda:invokeFunction',
-  //   eventSourceToken: "amzn1.ask.skill.8db4cf1c-e076-4fa7-a123-8c49c65ea3b9"
-  // });
-
   const skill = new Skill(stack, 'Skill', {
     endpointLambdaFunction: skillLambda,
     skillPackagePath: 'skill-package',

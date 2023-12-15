@@ -1,9 +1,12 @@
 export * as Rate from "./rate";
-import { DynamoDB, Request } from "aws-sdk";
+import { DynamoDB } from "aws-sdk";
 import moment from "moment";
 import { Table } from "sst/node/table";
+import 'moment-timezone';
 
-// TODO: Refactor this file into a functions/src/models/ folder
+// TODO: Fix the getters and setters for validation
+export const TIMEZONE = 'America/New_York'
+
 export interface RateType {
   rateDate: string,
   thirtyYrFixedMortgage?: string,
@@ -36,7 +39,7 @@ export const update = async (
   return dynamoDb.update(params).promise()
 }
 
-export const findOrCreate = async (rateDate: string = moment().format('MM/DD/YYYY')): Promise<any> => {
+export const findOrCreate = async (rateDate: string = moment().tz(TIMEZONE).format('MM/DD/YYYY')): Promise<any> => {
   const dynamoDb = new DynamoDB.DocumentClient();
 
   const findParams = {
@@ -63,14 +66,14 @@ export const findOrCreate = async (rateDate: string = moment().format('MM/DD/YYY
   return JSON.stringify(putParams.Item)
 }
 
-// TODO: use timezone of client
 export const findMostRecentlyAvailableRate = async (): Promise<any> => {
   const dynamoDb = new DynamoDB.DocumentClient();
 
   let i = 0;
   let rateDate = ''
   while (i < 7) {
-    rateDate = moment().subtract(i, 'day').format('MM/DD/YYYY');
+    rateDate = moment().tz(TIMEZONE).subtract(i, 'day').format('MM/DD/YYYY');
+    i++
 
     const findParams = {
       TableName: Table.Rates.tableName,
