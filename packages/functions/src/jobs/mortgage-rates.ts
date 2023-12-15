@@ -36,27 +36,27 @@ export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
 	const body = await resp.text();
   const root = parse(body);
 
-  // TODO: return early if there is no article for the day
-  // if (rateDate !== moment().format('M/D/YYYY')) {
-  //   return { statusCode: 200, body: "Mortgage rate has not posted for today."}
-  // }
   const articleTitle = root.querySelector('div.row.article-section div.article-title')?.text.trim()
   let articleBody = root.querySelector('div.row.article-section div.article-body')
   const advertisement = articleBody?.querySelector('div.cobrand-hide')
 
-  if (advertisement && articleBody) {
-    articleBody = articleBody?.removeChild(advertisement)
+  if (articleBody && articleTitle) {
+    if (advertisement) {
+      articleBody = articleBody?.removeChild(advertisement)
+    }
+
+    const sanitizedBody = articleBody?.structuredText.trim()
+
+    let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
+    rateItem.mortgageArticle = sanitizedBody
+    rateItem.mortgageArticleTitle = articleTitle
+
+    await Rate.update(rateItem).then((data) => {
+      console.log('updated', data)
+    }).catch((err) => {
+      console.log('error', err)
+    });
+  } else {
+    console.log(`Article has not been released for ${moment().tz(Rate.TIMEZONE).format('MM/DD/YYYY')}`)
   }
-
-  const sanitizedBody = articleBody?.structuredText.trim()
-
-  let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
-  rateItem.mortgageArticle = sanitizedBody
-  rateItem.mortgageArticleTitle = articleTitle
-
-  await Rate.update(rateItem).then((data) => {
-    console.log('updated', data)
-  }).catch((err) => {
-    console.log('error', err)
-  });
 });

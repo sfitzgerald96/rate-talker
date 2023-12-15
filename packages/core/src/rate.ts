@@ -4,7 +4,6 @@ import moment from "moment";
 import { Table } from "sst/node/table";
 import 'moment-timezone';
 
-// TODO: Fix the getters and setters for validation
 export const TIMEZONE = 'America/New_York'
 
 export interface RateType {
