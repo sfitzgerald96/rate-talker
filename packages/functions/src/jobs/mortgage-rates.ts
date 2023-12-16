@@ -12,7 +12,7 @@ export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
   const rateDate = root.querySelector('div.current-mtg-rate > div.rate-date.pull-right')?.text.trim() || '';
 
   if (rateDate !== moment().tz(Rate.TIMEZONE).format('M/D/YYYY')) {
-    return { statusCode: 200, body: "Mortgage rate has not posted for today."}
+    console.log("Mortgage rate has not posted for today.")
   }
 
   const fifteenRate = root.querySelector('div.row.rate-page > div > table > tbody > tr:nth-child(2) > td:nth-child(2)')?.text.trim().replaceAll('%', '');
@@ -24,10 +24,8 @@ export const scrapeAndStoreRates = ApiHandler(async (_evt) => {
 
   await Rate.update(rateItem).then((data) => {
     console.log('updated', data)
-    return data
   }).catch((err) => {
     console.log('error', err)
-    return err
   });
 });
 
