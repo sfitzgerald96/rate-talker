@@ -57,7 +57,7 @@ export class RateSpeechGenerator {
     const finalText = `${this.buildIntroText(this.rateItem.rateDate)} ${this.buildRateText()} ${this.buildArticleText()}`;
 
     if (this.unreleasedMetrics.length > 0) {
-      return `Please note that the following metrics have not yet been recorded: ${this.unreleasedMetrics.join(', ')}` + finalText;
+      return `Please note that the following metrics have not yet been recorded: ${this.unreleasedMetrics.join(', ')} ${finalText}`;
     } else {
       return finalText;
     }
