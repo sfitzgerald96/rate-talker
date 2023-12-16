@@ -1,0 +1,12 @@
+on:
+  release:
+
+jobs:
+  deploy-prod:
+    name: "Deploy Prod"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Run Tests"
+        run: "npm run test"
+      - name: "Deploy Prod"
+        run: "npm run sst deploy --stage prod"
