@@ -8,5 +8,7 @@ jobs:
     name: "Test and Deploy Dev"
     runs-on: ubuntu-latest
     steps:
+      - name: "Install deps"
+        run: "npm ci"
       - name: "Run Tests"
         run: "npm run test"
