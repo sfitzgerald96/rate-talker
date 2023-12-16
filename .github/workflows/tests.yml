@@ -5,9 +5,11 @@ on:
 
 jobs:
   test:
-    name: "Test and Deploy Dev"
+    name: "Test"
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: "Install deps"
         run: "npm ci"
       - name: "Run Tests"
