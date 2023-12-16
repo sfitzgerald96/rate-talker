@@ -3,7 +3,7 @@
     "apis": {
       "custom": {
         "endpoint": {
-          "uri": "arn:aws:lambda:us-east-1:814880304679:function:sfitzgerald-my-sst-app-Al-RateTalkerAlexaSkill8F6C-NVFglknKundc"
+          "uri": "dynamically updated by the AlexaSkill CDK Construct"
         },
         "interfaces": [],
         "locales": {}

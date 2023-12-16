@@ -1,6 +1,5 @@
 import * as events from "aws-cdk-lib/aws-events";
 import { LambdaFunction } from "aws-cdk-lib/aws-events-targets";
-import { ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { SecretValue } from "aws-cdk-lib/core";
 import { Skill } from "cdk-alexa-skill";
 import { StackContext, use, Function } from "sst/constructs";
