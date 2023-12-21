@@ -12,19 +12,19 @@
     "manifestVersion": "1.0",
     "publishingInformation": {
       "category": "KNOWLEDGE_AND_TRIVIA",
-      "distributionCountries": [],
-      "isAvailableWorldwide": true,
+      "distributionCountries": ["US"],
+      "isAvailableWorldwide": false,
       "locales": {
         "en-US": {
-          "description": "Sample Full Description",
+          "description": "Keep up to date with what's going on with mortgage rates and other important financial rates like the ten year treasury. Information is aggregated from Mortgage News Daily and CNBC",
           "examplePhrases": [
-            "Alexa open hello world",
-            "hello",
-            "help"
+            "Alexa open rate talker",
+            "Alexa, ask rate talker about rates",
+            "Alexa, read me the latest mortgage news daily article"
           ],
-          "keywords": [],
+          "keywords": ["mortgage rates, interest rates, treasury rates"],
           "name": "Rate Talker (Dev)",
-          "summary": "Sample Short Description"
+          "summary": "Useful for gathering information on mortgage rates and other key financial metrics."
         }
       },
       "testingInstructions": "Sample Testing Instructions."
