@@ -1,41 +1,9 @@
 {
   "manifest": {
-    "apis": {
-      "custom": {
-        "endpoint": {
-          "uri": "dynamically updated by the AlexaSkill CDK Construct"
-        },
-        "interfaces": [],
-        "locales": {}
-      }
-    },
-    "manifestVersion": "1.0",
-    "privacyAndCompliance": {
-      "allowsPurchases": false,
-      "containsAds": false,
-      "isChildDirected": false,
-      "locales": {
-        "en-US": {}
-      },
-      "shoppingKit": {
-        "isAmazonAssociatesOnAlexaEnabled": false,
-        "isShoppingActionsEnabled": false
-      },
-      "usesPersonalInfo": false
-    },
     "publishingInformation": {
-      "automaticDistribution": {
-        "isActive": false
-      },
-      "category": "KNOWLEDGE_AND_TRIVIA",
-      "distributionCountries": [
-        "US"
-      ],
-      "distributionMode": "PUBLIC",
-      "isAvailableWorldwide": false,
       "locales": {
         "en-US": {
-          "description": "Keep up to date with what\u0027s going on with mortgage rates and other important financial rates like the ten year treasury. Information is aggregated from Mortgage News Daily and CNBC",
+          "summary": "Useful for gathering information on mortgage rates and other key financial metrics.",
           "examplePhrases": [
             "Alexa open rate talker",
             "Alexa, ask rate talker about rates",
@@ -48,10 +16,45 @@
             "mortgage"
           ],
           "name": "Rate Talker",
-          "summary": "Useful for gathering information on mortgage rates and other key financial metrics."
+          "description": "Keep up to date with what\u0027s going on with mortgage rates and other important financial rates like the ten year treasury. Information is aggregated from Mortgage News Daily and CNBC",
+          "smallIconUri": "file://assets/images/en-US_smallIconUri.png",
+          "largeIconUri": "file://assets/images/en-US_largeIconUri.png"
         }
       },
-      "testingInstructions": "{\"ask_dist_username\":\"\",\"ask_dist_password\":\"\",\"ask_dist_testing_instructions\":\"The app has two functions currently. It can tell you about today\u0027s rates and about today\u0027s mortgage article. Test by doing the following:\\n\\nAsk rate talker to tell you current rates\\nAsk rate talker to read you the mortgage insights articles.\"}"
+      "automaticDistribution": {
+        "isActive": false
+      },
+      "isAvailableWorldwide": false,
+      "testingInstructions": "{\"ask_dist_username\":\"\",\"ask_dist_password\":\"\",\"ask_dist_testing_instructions\":\"The app has two functions currently. It can tell you about today\u0027s rates and about today\u0027s mortgage article. Test by doing the following:\\n\\nAsk rate talker to tell you current rates\\nAsk rate talker to read you the mortgage insights articles.\"}",
+      "category": "KNOWLEDGE_AND_TRIVIA",
+      "distributionMode": "PUBLIC",
+      "distributionCountries": [
+        "US"
+      ]
+    },
+    "apis": {
+      "custom": {
+        "endpoint": {
+          "uri": "dynamically updated by the AlexaSkill CDK Construct"
+        },
+        "interfaces": [],
+        "locales": {}
+      }
+    },
+    "manifestVersion": "1.0",
+    "privacyAndCompliance": {
+      "allowsPurchases": false,
+      "locales": {
+        "en-US": {}
+      },
+      "containsAds": false,
+      "isExportCompliant": true,
+      "isChildDirected": false,
+      "shoppingKit": {
+        "isShoppingActionsEnabled": false,
+        "isAmazonAssociatesOnAlexaEnabled": false
+      },
+      "usesPersonalInfo": false
     }
   }
 }
