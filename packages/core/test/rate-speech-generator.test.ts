@@ -67,3 +67,11 @@ describe("Rate text", () => {
     expect(generatedSpeech).not.toContain(`${rateAttrsToSpeech[0].label} is ${rateItem[rateAttrsToSpeech[0].name]}%.`)
   })
 })
+
+describe("Financial Disclaimer", () => {
+  it("exists", () => {
+    const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech)
+    const generatedSpeech = speechGenerator.generateSpeech()
+    expect(generatedSpeech).toContain(`Financial Disclaimers:`)
+  })
+})

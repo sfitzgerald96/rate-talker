@@ -15,9 +15,13 @@ export class RateSpeechGenerator {
     this.rateAttrsToSpeech = rateAttrsToSpeech;
   }
 
+  private buildFinancialDisclaimerText(): string {
+    return "Financial Disclaimers: Mortgage rates are provided from Mortgage News Daily as the average rate across US lenders, so rates can vary from lender to lender. Additionally, the 10 year US treasury quotes may have up to 1 hour of lag."
+  }
+
   private buildIntroText(rateDate: string): string {
     if (rateDate === moment().tz(Rate.TIMEZONE).format('MM/DD/YYYY')) {
-      return ""
+      return "Rates from today are as follows: "
     } else {
       return `Rates for ${rateDate} are as follows: `
     }
@@ -53,6 +57,6 @@ export class RateSpeechGenerator {
   }
 
   generateSpeech(): string {
-    return `${this.buildWarningText()} ${this.buildIntroText(this.rateItem.rateDate)} ${this.buildRateText()}`
+    return `${this.buildWarningText()} ${this.buildIntroText(this.rateItem.rateDate)} ${this.buildRateText()} ${this.buildFinancialDisclaimerText()}`
   }
 }
