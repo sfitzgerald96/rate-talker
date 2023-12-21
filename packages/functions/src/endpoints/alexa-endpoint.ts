@@ -37,7 +37,7 @@ const ReadMortgageInsightsIntentHandler: RequestHandler = {
       && request.intent.name === 'ReadMortgageInsights';
   },
   async handle(handlerInput : HandlerInput) : Promise<Response> {
-    let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
+    let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableArticle())
     const speechGenerator = new MortgageInsightsSpeechGenerator(rateItem);
     const speechText = speechGenerator.generateSpeech();
 

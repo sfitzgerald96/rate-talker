@@ -90,3 +90,27 @@ export const findMostRecentlyAvailableRate = async (): Promise<any> => {
     }
   };
 }
+
+export const findMostRecentlyAvailableArticle = async (): Promise<any> => {
+  const dynamoDb = new DynamoDB.DocumentClient();
+
+  let i = 0;
+  let rateDate = ''
+  while (i < 7) {
+    rateDate = moment().tz(TIMEZONE).subtract(i, 'day').format('MM/DD/YYYY');
+    i++
+
+    const findParams = {
+      TableName: Table.Rates.tableName,
+      Key: {
+        rateDate: rateDate,
+      },
+    }
+
+    const results = await dynamoDb.get(findParams).promise();
+
+    if (results.Item?.mortgageArticle) {
+      return JSON.stringify(results.Item)
+    }
+  };
+}
