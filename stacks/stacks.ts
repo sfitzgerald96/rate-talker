@@ -98,12 +98,12 @@ export async function AlexaSkill({ stack }: StackContext) {
     handler: "packages/functions/src/endpoints/alexa-endpoint.handler",
   });
 
-  await fs.copyFile(`./skill-package/${stack.stage}.json`, './skill-package/skill.json', (err) => { 
+  await fs.copyFile(`./skill-package/${stack.stage}.json`, './skill-package/package/skill.json', (err) => { 
     console.log(err)
   })
   const skill = new Skill(stack, 'Skill', {
     endpointLambdaFunction: skillLambda,
-    skillPackagePath: 'skill-package',
+    skillPackagePath: 'skill-package/package',
     alexaVendorId: alexaVendorId,
     lwaClientId: lwaClientId,
     lwaClientSecret: lwaClientSecret,

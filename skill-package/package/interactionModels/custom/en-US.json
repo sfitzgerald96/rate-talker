@@ -23,6 +23,15 @@
           "samples": []
         },
         {
+          "name": "RatesOverview",
+          "samples": [
+            "Do you know what rates are",
+            "What are rates",
+            "Give me an overview of rates",
+            "What\u0027s a summary of current rates"
+          ]
+        },
+        {
           "slots": [
             {
               "name": "date",
@@ -31,17 +40,11 @@
           ],
           "name": "GetMortgageRates",
           "samples": [
-            "Do you know what mortgage rates are",
-            "What are mortgage rates",
-            "What was mortgage rates on {date}",
+            "What were mortgage rates on {date}",
             "What were mortgage rates on {date}",
             "What were mortgage rates {date}",
             "What are mortgage rates {date}",
-            "What\u0027s the mortgage rate {date}",
-            "What was the report for the mortgage rates on {date}",
-            "What was the rate of the mortgage on {date}",
-            "Do you know what the mortgage rate was on {date}",
-            "What was the mortgage rate on {date}"
+            "What\u0027s the mortgage rate {date}"
           ]
         },
         {
