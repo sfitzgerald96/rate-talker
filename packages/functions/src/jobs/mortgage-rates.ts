@@ -46,8 +46,10 @@ export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
     const sanitizedBody = articleBody?.structuredText.trim()
 
     let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
-    rateItem.mortgageArticle = sanitizedBody
-    rateItem.mortgageArticleTitle = articleTitle
+    if (rateItem.mortgageArticle) {
+      rateItem.mortgageArticle.body = sanitizedBody
+      rateItem.mortgageArticle.title = articleTitle
+    }
 
     await Rate.update(rateItem).then((data) => {
       console.log('updated', data)

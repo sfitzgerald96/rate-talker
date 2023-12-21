@@ -8,10 +8,12 @@ export const TIMEZONE = 'America/New_York'
 
 export interface RateType {
   rateDate: string,
-  thirtyYrFixedMortgage?: string,
-  mortgageArticle?: string,
-  mortgageArticleTitle?: string,
   fifteenYrFixedMortgage?: string,
+  thirtyYrFixedMortgage?: string,
+  mortgageArticle?: {
+    body: string,
+    title: string
+  }
   tenYrTreasury?: string,
 }
 
@@ -25,11 +27,10 @@ export const update = async (
     Key: {
       "rateDate": rate.rateDate,
     },
-    UpdateExpression: 'set thirtyYrFixedMortgage = :thirty, mortgageArticle = :article, mortgageArticleTitle = :articleTitle, fifteenYrFixedMortgage = :fifteen, tenYrTreasury = :ten',
+    UpdateExpression: 'set thirtyYrFixedMortgage = :thirty, mortgageArticle = :article, fifteenYrFixedMortgage = :fifteen, tenYrTreasury = :ten',
     ExpressionAttributeValues: {
       ':thirty': rate.thirtyYrFixedMortgage || "",
       ':article': rate.mortgageArticle || "",
-      ':articleTitle': rate.mortgageArticleTitle || "",
       ':fifteen': rate.fifteenYrFixedMortgage || "",
       ':ten': rate.tenYrTreasury || "",
     }

@@ -13,8 +13,10 @@ const rateItem: RateType = {
   fifteenYrFixedMortgage: "6.21",
   thirtyYrFixedMortgage: "6.82",
   tenYrTreasury: "3.98",
-  mortgageArticleTitle: "test title",
-  mortgageArticle: "test article"
+  mortgageArticle: {
+    body: "test body",
+    title: "test title"
+  }
 }
 
 describe("Metrics unavailable warning", () => {
@@ -45,7 +47,6 @@ describe("Intro text", () => {
     const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech)
     const generatedSpeech = speechGenerator.generateSpeech()
 
-    console.log(generatedSpeech)
     expect(generatedSpeech).toContain("Today\'s rates are as follows:")
     vi.useRealTimers();
   })
@@ -65,7 +66,7 @@ describe("Intro text", () => {
 })
 
 describe("Rate text", () => {
-  it("shares the rate when the rate is available", () => {
+  it("reads the rate when the rate is available", () => {
     const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech)
     const generatedSpeech = speechGenerator.generateSpeech()
     expect(generatedSpeech).toContain(`${rateAttrsToSpeech[0].label} is ${rateItem[rateAttrsToSpeech[0].name]}%.`)
@@ -82,18 +83,18 @@ describe("Rate text", () => {
 })
 
 describe("Article text", () => {
-  it("shares the article when the article is available", () => {
+  it("reads the article when the article is available", () => {
     const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech)
     const generatedSpeech = speechGenerator.generateSpeech()
-    expect(generatedSpeech).toContain(`is titled "${rateItem.mortgageArticleTitle}". It reads: "${rateItem.mortgageArticle}"`)
+    expect(generatedSpeech).toContain(`is titled "${rateItem.mortgageArticle?.title}". It reads: "${rateItem.mortgageArticle?.body}"`)
   })
 
   it("omits the article when the article is unavailable", () => {
     const speechGenerator = new RateSpeechGenerator(
-      {...rateItem, mortgageArticle: undefined, mortgageArticleTitle: undefined},
+      {...rateItem, mortgageArticle: undefined},
       rateAttrsToSpeech
     )
     const generatedSpeech = speechGenerator.generateSpeech()
-    expect(generatedSpeech).not.toContain(`is titled "${rateItem.mortgageArticleTitle}". It reads: "${rateItem.mortgageArticle}"`)
+    expect(generatedSpeech).not.toContain(`is titled "${rateItem.mortgageArticle?.title}". It reads: "${rateItem.mortgageArticle}"`)
   })
 })

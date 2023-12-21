@@ -4,6 +4,7 @@ import { SecretValue } from "aws-cdk-lib/core";
 import { Skill } from "cdk-alexa-skill";
 import { StackContext, use, Function } from "sst/constructs";
 import { Table } from "sst/constructs";
+import * as fs from 'fs'
 
 export function DynamoDB({ stack, app }: {stack: any, app: any}) {
   const table = new Table(stack, "Rates", {
@@ -11,7 +12,6 @@ export function DynamoDB({ stack, app }: {stack: any, app: any}) {
       rateDate: "string",
       thirtyYrFixedMortgage: "string",
       mortgageArticle: "string",
-      mortgageArticleTitle: "string",
       fifteenYrFixedMortgage: "string",
       tenYrTreasury: "string",
     },
@@ -67,7 +67,7 @@ export function DataCollectionJobs({ stack }: StackContext) {
   tenYrTreasuryCron.addTarget(new LambdaFunction(tenYrTreasuryFn))
 }
 
-export function AlexaSkill({ stack }: StackContext) {
+export async function AlexaSkill({ stack }: StackContext) {
   const { table } = use(DynamoDB)
 
   // Get Alexa Developer credentials from SSM Parameter Store/Secrets Manager.
@@ -98,6 +98,9 @@ export function AlexaSkill({ stack }: StackContext) {
     handler: "packages/functions/src/endpoints/alexa-endpoint.handler",
   });
 
+  await fs.copyFile(`./skill-package/${stack.stage}.json`, './skill-package/skill.json', (err) => { 
+    console.log(err)
+  })
   const skill = new Skill(stack, 'Skill', {
     endpointLambdaFunction: skillLambda,
     skillPackagePath: 'skill-package',

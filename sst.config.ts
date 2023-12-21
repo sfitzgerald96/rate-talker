@@ -4,7 +4,7 @@ import { AlexaSkill, DataCollectionJobs, DynamoDB} from "./stacks/stacks.js";
 export default {
   config(_input) {
     return {
-      name: "my-sst-app",
+      name: "rate-talker",
       region: "us-east-1",
     };
   },

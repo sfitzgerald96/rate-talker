@@ -15,28 +15,11 @@
           "samples": []
         },
         {
-          "slots": [],
-          "name": "HelloWorldIntent",
-          "samples": [
-            "hello",
-            "how are you",
-            "say hi world",
-            "say hi",
-            "hi",
-            "say hello world",
-            "say hello"
-          ]
-        },
-        {
           "name": "AMAZON.NavigateHomeIntent",
           "samples": []
         },
         {
           "name": "AMAZON.FallbackIntent",
-          "samples": []
-        },
-        {
-          "name": "AMAZON.ReadAction\u003cobject@Calendar\u003e",
           "samples": []
         },
         {
@@ -71,16 +54,6 @@
           "name": "ReadMortgageInsights",
           "samples": [
             "Read {date} mortgage insights"
-          ]
-        },
-        {
-          "slots": [],
-          "name": "AskWeatherIntent",
-          "samples": [
-            "what\u0027s it like out",
-            "what is it like out",
-            "what\u0027s the weather",
-            "what is the weather"
           ]
         }
       ],

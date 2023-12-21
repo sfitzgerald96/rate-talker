@@ -44,8 +44,8 @@ export class RateSpeechGenerator {
   private buildArticleText(): string {
     let articleText = '';
 
-    if (this.rateItem.mortgageArticle && this.rateItem.mortgageArticleTitle) {
-      articleText += `The Mortgage Insights article from Mortgage News Daily written by Matthew Graham is titled "${this.rateItem.mortgageArticleTitle}". It reads: "${this.rateItem.mortgageArticle}"`;
+    if (this.rateItem.mortgageArticle && this.rateItem.mortgageArticle?.title) {
+      articleText += `The Mortgage Insights article from Mortgage News Daily written by Matthew Graham is titled "${this.rateItem.mortgageArticle?.title}". It reads: "${this.rateItem.mortgageArticle.body}"`;
     } else {
       this.unreleasedMetrics.push('Mortgage Insights Article')
     }
