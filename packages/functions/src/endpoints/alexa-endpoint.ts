@@ -19,12 +19,12 @@ const LaunchRequestHandler: RequestHandler = {
     return request.type === 'LaunchRequest';
   },
   handle(handlerInput: HandlerInput) : Response {
-    const speechText = 'Welcome to rate talker! Ask me an overview about rates, about specific rates like mortgage rates and treasury rates, or about current mortgage news.';
+    const speechText = 'Welcome to rate talker! Ask me about rates or ask me to read you the latest mortgage insights article!';
 
     const response = handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
-      .withSimpleCard('Welcome to your rate talker skill. Ask me about mortgage rates!', speechText)
+      .withSimpleCard('Welcome!', speechText)
       .getResponse();
     return response
   },
@@ -79,12 +79,12 @@ const HelpIntentHandler: RequestHandler = {
       && request.intent.name === 'AMAZON.HelpIntent';
   },
   handle(handlerInput: HandlerInput) : Response {
-    const speechText = 'You can ask me about mortgage rates!';
+    const speechText = 'Ask me about rates or ask me to read you the latest mortgage insights article!';
 
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(speechText)
-      .withSimpleCard('You can ask me about mortgage rates!', speechText)
+      .withSimpleCard('Ask me about rates!', speechText)
       .getResponse();
   },
 };
