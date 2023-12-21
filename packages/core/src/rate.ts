@@ -11,6 +11,7 @@ export interface RateType {
   fifteenYrFixedMortgage?: string,
   thirtyYrFixedMortgage?: string,
   mortgageArticle?: {
+    author: string,
     body: string,
     title: string
   }

@@ -1,5 +1,6 @@
 import { Rate, RateType } from '@my-sst-app/core/rate';
-import { RateAttrsToSpeech, RateSpeechGenerator } from '@my-sst-app/core/rate-speech-generator';
+import {  RateAttrsToSpeech, RateSpeechGenerator } from '@my-sst-app/core/rate-speech-generator';
+import { MortgageInsightsSpeechGenerator } from  '@my-sst-app/core/mortgage-insights-speech-generator'
 import {
   ErrorHandler,
   HandlerInput,
@@ -18,7 +19,7 @@ const LaunchRequestHandler: RequestHandler = {
     return request.type === 'LaunchRequest';
   },
   handle(handlerInput: HandlerInput) : Response {
-    const speechText = 'Welcome to your rate talker skill. Ask me about mortgage rates!';
+    const speechText = 'Welcome to rate talker! Ask me an overview about rates, about specific rates like mortgage rates and treasury rates, or about current mortgage news.';
 
     const response = handlerInput.responseBuilder
       .speak(speechText)
@@ -35,21 +36,23 @@ const ReadMortgageInsightsIntentHandler: RequestHandler = {
     return request.type === 'IntentRequest'
       && request.intent.name === 'ReadMortgageInsights';
   },
-  handle(handlerInput : HandlerInput) : Response {
-    const speechText = 'Here is the article:';
+  async handle(handlerInput : HandlerInput) : Promise<Response> {
+    let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
+    const speechGenerator = new MortgageInsightsSpeechGenerator(rateItem);
+    const speechText = speechGenerator.generateSpeech();
 
     return handlerInput.responseBuilder
       .speak(speechText)
-      .withSimpleCard('Here is the article:', speechText)
+      .withSimpleCard('Article:', speechText)
       .getResponse();
   },
 };
 
-const GetMortgageRatesIntentHandler : RequestHandler = {
+const RatesOverviewHandler : RequestHandler = {
   canHandle(handlerInput: HandlerInput) : boolean {
     const request = handlerInput.requestEnvelope.request;  
     return request.type === 'IntentRequest'
-      && request.intent.name === 'GetMortgageRates';
+      && request.intent.name === 'RatesOverview';
   },
   async handle(handlerInput: HandlerInput) : Promise<Response> {
     let rateItem: RateType = JSON.parse(await Rate.findMostRecentlyAvailableRate())
@@ -59,8 +62,8 @@ const GetMortgageRatesIntentHandler : RequestHandler = {
       { name: 'fifteenYrFixedMortgage', label: 'Fifteen year mortgage' },
       { name: 'tenYrTreasury', label: 'Ten year treasury' },
     ];
-    const rateSpeechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech);
-    const speechText = rateSpeechGenerator.generateSpeech();
+    const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech);
+    const speechText = speechGenerator.generateSpeech();
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -133,9 +136,9 @@ const MyErrorHandler : ErrorHandler = {
 export const handler: Handler = async (event: any, context: any) => {
   const skillHandler = SkillBuilders.custom()
     .addRequestHandlers(
-      LaunchRequestHandler,
-      GetMortgageRatesIntentHandler,
+      RatesOverviewHandler,
       ReadMortgageInsightsIntentHandler,
+      LaunchRequestHandler,
       HelpIntentHandler,
       CancelAndStopIntentHandler,
       SessionEndedRequestHandler

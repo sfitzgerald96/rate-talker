@@ -13,10 +13,7 @@ const rateItem: RateType = {
   fifteenYrFixedMortgage: "6.21",
   thirtyYrFixedMortgage: "6.82",
   tenYrTreasury: "3.98",
-  mortgageArticle: {
-    body: "test body",
-    title: "test title"
-  }
+  mortgageArticle: undefined
 }
 
 describe("Metrics unavailable warning", () => {
@@ -40,18 +37,7 @@ describe("Metrics unavailable warning", () => {
 })
 
 describe("Intro text", () => {
-  it("says today's rates are available when there is an entry for today's date", () => {
-    vi.useFakeTimers();
-    vi.setSystemTime(new Date(rateItem.rateDate));
-
-    const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech)
-    const generatedSpeech = speechGenerator.generateSpeech()
-
-    expect(generatedSpeech).toContain("Today\'s rates are as follows:")
-    vi.useRealTimers();
-  })
-
-  it ("says today's rates have not been recorded when there is no entry for today", () => {
+  it ("says the date of the rate when there is no entry for today", () => {
     vi.useFakeTimers();
     let today = new Date(rateItem.rateDate)
     today.setDate(today.getDate() + 1)
@@ -60,7 +46,7 @@ describe("Intro text", () => {
     const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech)
     const generatedSpeech = speechGenerator.generateSpeech()
   
-    expect(generatedSpeech).toContain("Today\'s rates have not been recorded")
+    expect(generatedSpeech).toContain(`Rates for ${rateItem.rateDate} are as follows:`)
     vi.useRealTimers();
   })
 })
@@ -79,22 +65,5 @@ describe("Rate text", () => {
     )
     const generatedSpeech = speechGenerator.generateSpeech()
     expect(generatedSpeech).not.toContain(`${rateAttrsToSpeech[0].label} is ${rateItem[rateAttrsToSpeech[0].name]}%.`)
-  })
-})
-
-describe("Article text", () => {
-  it("reads the article when the article is available", () => {
-    const speechGenerator = new RateSpeechGenerator(rateItem, rateAttrsToSpeech)
-    const generatedSpeech = speechGenerator.generateSpeech()
-    expect(generatedSpeech).toContain(`is titled "${rateItem.mortgageArticle?.title}". It reads: "${rateItem.mortgageArticle?.body}"`)
-  })
-
-  it("omits the article when the article is unavailable", () => {
-    const speechGenerator = new RateSpeechGenerator(
-      {...rateItem, mortgageArticle: undefined},
-      rateAttrsToSpeech
-    )
-    const generatedSpeech = speechGenerator.generateSpeech()
-    expect(generatedSpeech).not.toContain(`is titled "${rateItem.mortgageArticle?.title}". It reads: "${rateItem.mortgageArticle}"`)
   })
 })

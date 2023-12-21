@@ -36,9 +36,10 @@ export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
 
   const articleTitle = root.querySelector('div.row.article-section div.article-title')?.text.trim()
   let articleBody = root.querySelector('div.row.article-section div.article-body')
+  const articleAuthor = root.querySelector('div.row.article-section div.article-byline > span.article-author')?.text.trim()
   const advertisement = articleBody?.querySelector('div.cobrand-hide')
 
-  if (articleBody && articleTitle) {
+  if (articleBody) {
     if (advertisement) {
       articleBody = articleBody?.removeChild(advertisement)
     }
@@ -46,10 +47,10 @@ export const scrapeAndStoreArticle = ApiHandler(async (_evt) => {
     const sanitizedBody = articleBody?.structuredText.trim()
 
     let rateItem: RateType = JSON.parse(await Rate.findOrCreate())
-    if (rateItem.mortgageArticle) {
-      rateItem.mortgageArticle.body = sanitizedBody
-      rateItem.mortgageArticle.title = articleTitle
-    }
+    rateItem.mortgageArticle = { body: "", title: "", author: ""}
+    rateItem.mortgageArticle.author = articleAuthor || ""
+    rateItem.mortgageArticle.body = sanitizedBody
+    rateItem.mortgageArticle.title = articleTitle || ""
 
     await Rate.update(rateItem).then((data) => {
       console.log('updated', data)

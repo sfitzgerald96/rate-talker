@@ -28,35 +28,20 @@
             "Do you know what rates are",
             "What are rates",
             "Give me an overview of rates",
-            "What\u0027s a summary of current rates"
+            "What is a summary of current rates",
+            "Tell me about mortgage rates",
+            "What is the fifteen year mortgage",
+            "What is the thirty year mortgage",
+            "What is the ten year treasury"
           ]
         },
         {
-          "slots": [
-            {
-              "name": "date",
-              "type": "AMAZON.DATE"
-            }
-          ],
-          "name": "GetMortgageRates",
-          "samples": [
-            "What were mortgage rates on {date}",
-            "What were mortgage rates on {date}",
-            "What were mortgage rates {date}",
-            "What are mortgage rates {date}",
-            "What\u0027s the mortgage rate {date}"
-          ]
-        },
-        {
-          "slots": [
-            {
-              "name": "date",
-              "type": "AMAZON.DATE"
-            }
-          ],
           "name": "ReadMortgageInsights",
           "samples": [
-            "Read {date} mortgage insights"
+            "Read mortgage insights",
+            "What is mortgage insights article",
+            "Read me an article about mortgage rates",
+            "Read me the mortgage insights article"
           ]
         }
       ],
